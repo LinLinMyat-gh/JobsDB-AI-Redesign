@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jobsdb — Find the right job. Faster.</title>
+<style>
+  :root{
+    --purple-deep:#2d1b69;
+    --purple-mid:#4a2f9e;
+    --purple-bright:#6c2bd9;
+    --purple-accent:#7b2ff7;
+    --ink:#1a1a2e;
+    --muted:#6b6b80;
+    --line:#e7e6ef;
+    --panel-locals:#f4f0ff;
+    --panel-foreign:#efe9fd;
+    --white:#ffffff;
+    --green:#1fa971;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color:var(--ink);
+    background:var(--white);
+  }
+  a{text-decoration:none;color:inherit;}
+
+  /* ---------- NAVBAR ---------- */
+  header.nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .nav-left{display:flex;align-items:center;gap:36px;}
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:800;font-size:20px;color:var(--ink);
+  }
+  .logo .dot{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--purple-bright);
+    display:inline-block;
+  }
+  .logo small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:-2px;}
+  .nav-links{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+  .nav-links li{font-size:14px;font-weight:600;color:#2a2a3d;cursor:pointer;}
+  .nav-right{display:flex;align-items:center;gap:22px;font-size:14px;}
+  .nav-right .lang{display:flex;align-items:center;gap:4px;color:#2a2a3d;font-weight:600;}
+  .nav-right .avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:#e5c9c9;display:inline-block;
+    background-image:linear-gradient(135deg,#f0c9c0,#dba9b0);
+  }
+  .nav-right .employer{color:var(--purple-bright);font-weight:700;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(120deg,#1f1147 0%, #3d1f8a 45%, #6c2bd9 100%);
+    padding:56px 40px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-120px;top:-80px;
+    width:480px;height:480px;
+    background:radial-gradient(circle at center, rgba(255,255,255,0.08), transparent 70%);
+    border-radius:50%;
+  }
+  .hero-text{
+    text-align:center;
+    color:#fff;
+    position:relative;
+    z-index:2;
+  }
+  .hero-text h1{
+    font-size:36px;
+    margin:0 0 8px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+  }
+  .hero-text p{
+    margin:0 0 32px;
+    font-size:15px;
+    color:#d8cff0;
+    font-weight:400;
+  }
+
+  .panels{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:24px;
+    max-width:1180px;
+    margin:0 auto;
+    padding-bottom:56px;
+  }
+  .panel{
+    flex:1;
+    border-radius:16px;
+    padding:28px 32px 26px;
+  }
+  .panel.locals{background:var(--panel-locals);}
+  .panel.foreign{background:var(--panel-foreign);}
+
+  .panel-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:16px;
+  }
+  .icon-circle{
+    width:46px;height:46px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    flex-shrink:0;
+  }
+  .panel.locals .icon-circle{background:#e3d6ff;color:var(--purple-bright);}
+  .panel.foreign .icon-circle{background:#dcd2f9;color:var(--purple-deep);}
+
+  .panel-head h2{
+    margin:0;
+    font-size:18px;
+    color:var(--purple-deep);
+    font-weight:800;
+  }
+  .panel-head p{
+    margin:2px 0 0;
+    font-size:13px;
+    color:var(--muted);
+    max-width:340px;
+  }
+
+  .search-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .search-field{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#fff;
+    border:1px solid #e0dbf0;
+    border-radius:8px;
+    padding:11px 14px;
+    font-size:13px;
+    color:#8a8aa0;
+  }
+  .search-field svg{flex-shrink:0;width:14px;height:14px;opacity:0.6;}
+  .search-btn{
+    border:none;
+    border-radius:8px;
+    padding:0 22px;
+    font-size:14px;
+    font-weight:700;
+    color:#fff;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .panel.locals .search-btn{background:var(--purple-accent);}
+  .panel.foreign .search-btn{background:var(--purple-deep);}
+
+  .popular-label{
+    font-size:12px;
+    color:var(--muted);
+    margin:6px 0 10px;
+  }
+  .tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .tag{
+    background:#fff;
+    border:1px solid #e2ddf1;
+    border-radius:20px;
+    padding:6px 14px;
+    font-size:12px;
+    color:#3a3a55;
+    font-weight:600;
+  }
+  .panel.foreign .tag{background:#fff;color:#2a2a55;}
+
+  .quicklinks{
+    display:flex;
+    gap:24px;
+    padding-top:12px;
+    border-top:1px solid rgba(0,0,0,0.06);
+  }
+  .quicklinks span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:700;
+  }
+  .panel.locals .quicklinks span{color:var(--purple-accent);}
+  .panel.foreign .quicklinks span{color:var(--purple-deep);}
+
+  /* ---------- FEATURES ---------- */
+  .features{
+    display:flex;
+    justify-content:center;
+    gap:70px;
+    padding:34px 40px;
+    background:#fafafd;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .feature{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    max-width:210px;
+  }
+  .feature .fi{
+    width:44px;height:44px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+  }
+  .feature:nth-child(1) .fi{background:#f1e8ff;color:#7b2ff7;}
+  .feature:nth-child(2) .fi{background:#fde6f1;color:#e0468b;}
+  .feature:nth-child(3) .fi{background:#e6f0ff;color:#3b7bf0;}
+  .feature:nth-child(4) .fi{background:#e5f7ee;color:#1fa971;}
+  .feature h4{margin:0;font-size:13px;font-weight:700;}
+  .feature p{margin:2px 0 0;font-size:12px;color:var(--muted);}
+
+  /* ---------- LOWER SECTION ---------- */
+  .lower{
+    display:flex;
+    gap:24px;
+    padding:32px 40px 60px;
+    max-width:1280px;
+    margin:0 auto;
+  }
+  .recommended{flex:2.4;}
+  .saved{flex:1; background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;height:fit-content;}
+
+  .section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .section-head h3{
+    display:flex;align-items:center;gap:8px;
+    margin:0;font-size:15px;font-weight:800;
+  }
+  .section-head .viewall{font-size:12px;color:var(--purple-bright);font-weight:700;}
+
+  .job-cards{display:flex;gap:16px;}
+  .job-card{
+    flex:1;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px 18px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .job-card .logo-box{
+    width:38px;height:38px;
+    border-radius:6px;
+    background:#1a1a2e;
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;
+    flex-shrink:0;
+  }
+  .job-card .info{flex:1;}
+  .job-card .info h5{margin:0 0 4px;font-size:14px;font-weight:700;}
+  .job-card .info p{margin:0;font-size:12px;color:var(--muted);}
+  .job-card .bookmark{color:#c3c3d0;font-size:16px;}
+
+  .saved h3{margin:0 0 10px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .saved p{margin:0 0 12px;font-size:12px;color:var(--muted);}
+  .saved .viewall{font-size:12px;color:var(--purple-bright);font-weight:700;}
+
+  @media (max-width:900px){
+    .panels{flex-direction:column;}
+    .lower{flex-direction:column;}
+    .job-cards{flex-direction:column;}
+    .nav-links{display:none;}
+    .features{gap:24px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-left">
+    <div class="logo">
+      <span class="dot"></span>
+      <div>Jobsdb<small>by seek</small></div>
+    </div>
+    <ul class="nav-links">
+      <li>Find Jobs</li>
+      <li>Career Advice</li>
+      <li>Companies</li>
+      <li>Salaries ▾</li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <span class="lang">🌐 English ▾</span>
+    <span class="avatar"></span>
+    <span class="employer">Employer site</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h1>Find the right job. Faster.</h1>
+    <p>Tailored job search for locals and foreign talent in Thailand.</p>
+  </div>
+
+  <div class="panels">
+    <!-- LOCALS PANEL -->
+    <div class="panel locals">
+      <div class="panel-head">
+        <div class="icon-circle">📍</div>
+        <div>
+          <h2>Jobs for Locals</h2>
+          <p>Find local jobs that match your skills and grow your career in Thailand.</p>
+        </div>
+      </div>
+
+      <div class="search-row">
+        <div class="search-field">🔍 Job title, skill or company</div>
+        <div class="search-field">📍 Enter suburb, city or region ▾</div>
+        <button class="search-btn">Search Jobs</button>
+      </div>
+
+      <div class="popular-label">Popular searches:</div>
+      <div class="tags">
+        <span class="tag">Data Analyst</span>
+        <span class="tag">Marketing</span>
+        <span class="tag">Accounting</span>
+        <span class="tag">Sales</span>
+        <span class="tag">IT Support</span>
+      </div>
+
+      <div class="quicklinks">
+        <span>👤 Local opportunities</span>
+        <span>💬 Thai language jobs</span>
+        <span>⚡ Quick application</span>
+      </div>
+    </div>
+
+    <!-- FOREIGNERS PANEL -->
+    <div class="panel foreign">
+      <div class="panel-head">
+        <div class="icon-circle">🌐</div>
+        <div>
+          <h2>Jobs for Foreigners</h2>
+          <p>Find international jobs and work opportunities in Thailand for foreign professionals.</p>
+        </div>
+      </div>
+
+      <div class="search-row">
+        <div class="search-field">🔍 Job title, skill or company</div>
+        <div class="search-field">📍 Enter suburb, city or region ▾</div>
+        <button class="search-btn">Search Jobs</button>
+      </div>
+
+      <div class="popular-label">Popular searches:</div>
+      <div class="tags">
+        <span class="tag">Data Analyst</span>
+        <span class="tag">Marketing</span>
+        <span class="tag">Acccounting</span>
+        <span class="tag">Sales</span>
+        <span class="tag">IT Support</span>
+      </div>
+
+      <div class="quicklinks">
+        <span>🏢 International companies</span>
+        <span>🌐 English jobs</span>
+        <span>✈️ Visa &amp; relocation support</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature">
+    <div class="fi">✨</div>
+    <div>
+      <h4>AI Job Matching</h4>
+      <p>Get better job matches with AI based on your skills and experience.</p>
+    </div>
+  </div>
+  <div class="feature">
+    <div class="fi">📝</div>
+    <div>
+      <h4>Smart Application</h4>
+      <p>Fast-track your application with saved profiles and CV.</p>
+    </div>
+  </div>
+  <div class="feature">
+    <div class="fi">🔔</div>
+    <div>
+      <h4>Job Alerts</h4>
+      <p>Receive instant alerts for new jobs that match your preferences.</p>
+    </div>
+  </div>
+  <div class="feature">
+    <div class="fi">🛡️</div>
+    <div>
+      <h4>Secure &amp; Trusted</h4>
+      <p>Your data is safe with us. Trusted by millions.</p>
+    </div>
+  </div>
+</section>
+
+<section class="lower">
+  <div class="recommended">
+    <div class="section-head">
+      <h3>✨ Recommended for you</h3>
+      <span class="viewall">View all jobs →</span>
+    </div>
+    <div class="job-cards">
+      <div class="job-card">
+        <div class="logo-box">XYZ</div>
+        <div class="info">
+          <h5>Data Analyst</h5>
+          <p>XYZ Co., Ltd.</p>
+        </div>
+        <span class="bookmark">🔖</span>
+      </div>
+      <div class="job-card">
+        <div class="logo-box">XYZ</div>
+        <div class="info">
+          <h5>HR Business Partner</h5>
+          <p>XYZ Company</p>
+        </div>
+        <span class="bookmark">🔖</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="saved">
+    <h3>🔖 Saved searches <span style="margin-left:auto;" class="viewall">View all</span></h3>
+    <p>Save your preferred searches and get notified about new jobs.</p>
+  </div>
+</section>
+
+</body>
+</html>
