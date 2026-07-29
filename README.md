@@ -5,7 +5,7 @@
 
 Jobsdb is Thailand's leading employment marketplace. Despite its dominance, the platform has a critical gap. It treats all users the same, ignoring the distinct needs of foreign job seekers.
 
-As a foreigner who use Jobsdb, I usually browse **100 job postings** daily only to find **5-8 relevant ones**. Job descriptions in Thai, vague language requirements, and no clear indication of whether companies hire foreigners made the process time-consumimg and inefficient. This redesign addresses these pain points through simple segmentation.
+As a foreigner who use Jobsdb, I usually browse **100 job postings** daily only to find **5-8 relevant ones**. Job descriptions in Thai, vague language requirements, and no clear indication of whether companies hire foreigners made the process time-consuming and inefficient. This redesign addresses these pain points through simple segmentation.
 
 ---
 
