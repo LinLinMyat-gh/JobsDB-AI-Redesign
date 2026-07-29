@@ -26,12 +26,7 @@ As a foreigner who use Jobsdb, I usually browse **100 job postings** daily only 
 
 ## 3. Problems Identified
 
-| Problem | Description |
-|---------|-------------|
-| Inefficient screening | Foreigners must open each job posting individually to check eligibility |
-| Language barriers | Thai descriptions are inaccessible; English postings may still require Thai |
-| Unclear employer intent | Companies don't signal if they welcome foreign applicants |
-| Wasted time | 90%+ of opened jobs are irrelevant for foreigners |
+Foreigners must open each job posting individually to check eligibility, which is highly inefficient. Thai descriptions are inaccessible to non-Thai speakers, while English postings may still require Thai proficiency. Companies do not signal whether they welcome foreign applicants, and 90% or more of opened jobs are irrelevant for foreigners.
 
 ---
 
