@@ -68,5 +68,5 @@ The redesign significantly reduces screening time from hours to minutes for fore
 
 The platform will experience higher user retention among expatriates living in Thailand. The user base will expand to include Thailand's growing foreign community. Employers will see better satisfaction as they receive more qualified applicants for their positions. Jobsdb will achieve competitive differentiation through inclusivity, standing out from other job platforms in the market.
 
-Jobsdb already champions fair hiring through its **"Fair Hiring"** initiative. This redesign doesn't create barriers—it removes them, helping qualified candidates find positions where their skills are valued. 
+Jobsdb already champions fair hiring through its **"Fair Hiring"** initiative. This redesign doesn't create barriers, helping qualified candidates find positions where their skills are valued. 
 
